@@ -1,0 +1,10 @@
+Lugar para colocarmos as duvidas para tiramos com o professor na aula
+
+
+    No banco de registradores, na linha 28, fazer o process(LerDoReg1,LerDoReg2) serve como o "sinal de ler" já,
+pq não parece ter sinal LerReg no Bloco de Controle, só EscReg, tá certo isso? 
+    Na linha 38, é rising_edge ou fallig edge?
+
+
+
+    Na ULA, na linha 18, como prosseguir?
