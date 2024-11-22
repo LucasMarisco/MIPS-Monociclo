@@ -11,8 +11,8 @@ END ENTITY;
 
 ARCHITECTURE arch OF Ctrl-ULA IS
 
-cULA <= "010" when ULAOp = "00" else 
-        "110" when ULAOp = "01" else
+cULA <= "010" when ULAOp = "00" else -- lw , sw
+        "110" when ULAOp = "01" else -- beq
         "010" when funct = "100000" else -- add
         "110" when funct = "100010" else -- sub
         "000" when funct = "100100" else -- and
