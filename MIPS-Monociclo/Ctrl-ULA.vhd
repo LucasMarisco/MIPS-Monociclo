@@ -10,7 +10,7 @@ ENTITY Ctrl-ULA IS
 END ENTITY;
 
 ARCHITECTURE arch OF Ctrl-ULA IS
-
+BEGIN
 cULA <= "010" when ULAOp = "00" else -- lw , sw
         "110" when ULAOp = "01" else -- beq
         "010" when funct = "100000" else -- add
@@ -31,7 +31,5 @@ cULA <= "010" when ULAOp = "00" else -- lw , sw
 
 -- no nosso caso, se ele passar do 2 primeiros quer dizer que ULAOp é ou "10" ou "11", sendo assim
 -- podemos começar a analizar o funct, por isso fomos de when else
-
-BEGIN
 		
 END ARCHITECTURE arch;
