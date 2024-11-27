@@ -48,6 +48,8 @@ architecture arch of Monociclo is
             EscMem,ULAFonte,EscReg
             );
 
+    -- acho que temos que fazer alguma coisa sobre as memoria nesse código ainda       
+
 -- Atribuindo os sinais de controle para podermos ver no quartus e fazer os testes
 TRegDst <= RegDst;
 TDVI <= DVI
