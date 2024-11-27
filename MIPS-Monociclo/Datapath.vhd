@@ -8,7 +8,8 @@ ENTITY Datapath IS
 			RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
 			Instrucao: in STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
 			Sinal_pro_Controle,Endereco_Memoria_Instrucao,Endereco_Memoria_Dados: out STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
-			Dado,Dado_Escrita: in STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
+			Dado,Dado_Escrita,Dado_lido_Mem_Dados: in STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
+            -- não usamos o Dado_Escrita, dar uma olhada nisso 
     );
 END ENTITY;
 
@@ -26,12 +27,20 @@ BEGIN
 			generic map (32)
 			port map (clk, '1', M5, sPC);
 				   -- clk,  en,  d,  q
-	
-	Endereco_Memoria_Instrucao <= sPC;
+
+    Endereco_Memoria_Instrucao <= sPC;
+	--parte onde ocorre a quebra do sinal de 32 bits lá
+    Sinal_pro_Controle <= Instrucao[31 downto 26];
+	Instr <= Instrucao[25 DOWNTO 0];
+
+    -- ver se é nessa ordem que faz a concatenação
+    D1 <= Instr & "00" & S1[31 downto 28]; -- já fazendo o deslocamento a esquerda e a concatenação com o PC+4[31-28](Nosso S1)
 	
 	Somador1 : entity work.Somador_Generico(arch)
 			generic map (32)
 			port map (sPC,"00000000000000000000000000000100", S1, CarryOut);
+
+    D2 <= ES[29 downto 0] & "00"; -- cortamos os mais significativos e adicionamos "00" para fazer o shiftleft
 			
 	Somador2 : entity work.Somador_Generico(arch)
 			generic map (32)
@@ -45,28 +54,22 @@ BEGIN
 	
 	MUX5 : entity work.Multiplexador_Generico(arch)
 			generic map (32)
-			port map(M4,D1,DVI,M5);
-
-	--defini o sinal Instr aqui, n sei se tá definido em outro lugar
-	Instr <= Instrucao[25 DOWNTO 0];
-	-- ver se é nessa ordem que a gente faz a concatenação
-	D1 <= Instr & "00" & S1[31 downto 28]; -- já fazendo o deslocamento a esquerda
-	D2 <= ES[29 downto 0] & "00";
+			port map(D1,M4,DVI,M5);
 	
 	-- LOGICA REFERENTE AOS BANCO DE REGISTRADORES E A ULA
 	
-	Sinal_pro_Controle <= Instrucao[31 downto 26];
-	
 	Banco_Reg : entity.work.Banco_de_Registradores(arch)
-			generic map (32)
-			port map (Instr[25 downto 21], Instr[20 downto 16], M1, M3, A, B);
+			generic map (5,32) -- pode fazer assim?(pq temos 2 generics, aí)
+            -- NumBitsEndereco e NumBitsDosReg
+			port map (clk,EscReg,Instr[25 downto 21], Instr[20 downto 16], M1, M3, A, B);
+            --        clk,EscReg,     LerDoReg1,      LerDoReg2,  EscreverNoReg,DadoParaEscrever,DadoLido1,DadoLido2
 	
 	MUX1 : entity work.Multiplexador_Generico(arch)
 		generic map (4)
 		port map (Instr[20 downto 16], Instr[15 downto 11],RegDst,M1);	
 
-	-- inverti a ordem(veer se é assim que é pra fazer a extensão de sinal)					
-	ES <= Instr[15 downto 0] & "0000000000000000";
+	-- veer se é assim que é pra fazer a extensão de sinal(ver se é nessa ordem no caso)				
+	ES <= Instr[15 downto 0] & "0000000000000000"; -- ficamos com um sinal de 32 bits
 	
 	-- Lembra de mudar o nome da ULA para underline "-" -> "_"
 	
@@ -76,7 +79,9 @@ BEGIN
 	MUX2 : entity work.Multiplexador_Generico(arch)
 			generic map (32)
 			port map(B,ES,ULAFonte,M2);
-			
+	
+    --Olhar com cuidado aqui pq estamos fazendo a troca de informações com o Mem_Dados que não está em VHDL,
+    --ver se podemos fazer isso dessa forma
 	ULA : entity work.ULA(arch)
 			port map (A, M2, cULA, Zero, Endereco_Dados);	
 	
@@ -84,6 +89,6 @@ BEGIN
 	
 	MUX3: entity work.Multiplexador_Generico(arch)
 			generic map (32)
-			port map(Endereco_Dados, Dado, MemParaReg,M3);
+			port map(Dado_lido_Mem_Dados, Endereco_Dados, MemParaReg,M3);
 			
 END ARCHITECTURE arch;

@@ -8,4 +8,6 @@ pq não parece ter sinal LerReg no Bloco de Controle, só EscReg, tá certo isso
 
 
     Na ULA, na linha 18, como prosseguir?
+
+    No datapath, todos os componentes tem o mesmo clock ou temos que fazer clock, clock para o banco e assim por diante?
     
