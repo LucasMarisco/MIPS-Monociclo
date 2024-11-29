@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 
 entity Banco_de_Registradores is
     generic (
-        NumBitsEndereco : integer := 5  -- vamos usar 5 bits de Endereço, logo temos 2^5 registradores
+        NumBitsEndereco : integer := 5;  -- vamos usar 5 bits de Endereço, logo temos 2^5 registradores
         NumBitsDosReg : integer := 32  -- Qual o tamanho do valor que eles tem dentro
     );
     port (
@@ -31,6 +31,7 @@ begin
             -- aqui estamos acessando o array que criamos, como cada posição é um Registrador, basta pegarmos
             -- o valor do LerDoReg1(q é endereço do nosso Reg) e convertermos para um inteiro, mas para evitar
             -- valores negativos temos que transforma-lo em unsigened
+        end process;
 
     escrita:process(clk) is
         begin

@@ -1,15 +1,15 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 
-ENTITY Ctrl-ULA IS
+ENTITY Ctrl_ULA IS
     PORT (
         ULAOp: in STD_LOGIC_VECTOR(1 DOWNTO 0); -- Sequencia de bits para 
         funct: in STD_LOGIC_VECTOR(5 DOWNTO 0); -- Entradas
-		cULA: out STD_LOGIC_VECTOR(2 DOWNTO 0); -- Nao entendi como que funciona
+		cULA: out STD_LOGIC_VECTOR(2 DOWNTO 0) -- Nao entendi como que funciona
     );
 END ENTITY;
 
-ARCHITECTURE arch OF Ctrl-ULA IS
+ARCHITECTURE arch OF Ctrl_ULA IS
 BEGIN
 cULA <= "010" when ULAOp = "00" else -- lw , sw
         "110" when ULAOp = "01" else -- beq

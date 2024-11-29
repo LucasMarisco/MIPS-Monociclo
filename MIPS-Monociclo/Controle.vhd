@@ -5,9 +5,9 @@ use ieee.numeric_std.all;
 entity Controle is
     port (
         Opcode : in std_logic_vector(5 downto 0);
-        RegDst,DVI,DVC,LerMem,MemParaReg out std_logic;
+        RegDst,DVI,DVC,LerMem,MemParaReg: out std_logic;
         ULAOp: out std_logic_vector(1 downto 0);
-        EscMem,ULAFonte,EscReg, : out std_logic
+        EscMem,ULAFonte,EscReg : out std_logic
     );
 end entity;
 

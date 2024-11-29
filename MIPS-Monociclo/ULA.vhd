@@ -12,7 +12,7 @@ END ENTITY ULA;
 
 ARCHITECTURE arch OF ULA IS
 	-- Signals
-	SIGNAL Resultado_Soma_Subtracao, Resultado_AND_OR: STD_LOGIC_VECTOR(31 DOWNTO 0);
+	SIGNAL Resultado_Soma,Resultado_Subtracao, Resultado_AND_OR,Resultado_Menor: STD_LOGIC_VECTOR(31 DOWNTO 0);
 	SIGNAL CarryOut_Soma: STD_LOGIC;
 BEGIN
 	-- Precisa Fazer Dois componentes:
@@ -31,14 +31,16 @@ BEGIN
 	Somador_Generico: entity work.Somador_Generico(arch)
     port map (A,B,Resultado_Soma, CarryOut_Soma);
 	Subtrator_Generico: entity work.Subtrator_Generico(arch)
-	 port map (A,B,Resultado_Subtracao);
+	port map (A,B,Resultado_Subtracao);
 	 
-	with Controle select	
-		Resultado <= A and B when "000";
-		Resultado <= A or B when "001";
-		Resultado <= Resultado_Soma when "010";
-		Resultado <= Resultado_Subtracao when "110";
-		Resultado <= Resultado_Menor when "111";
+	with Controle select
+    Resultado <= A and B              when "000",
+                 A or B               when "001",
+                 Resultado_Soma       when "010",
+                 Resultado_Subtracao  when "110",
+                 Resultado_Menor      when "111",
+                 (others => '0')      when others;
+
 		
 END ARCHITECTURE arch;
 

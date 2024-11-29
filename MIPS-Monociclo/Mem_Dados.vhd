@@ -14,7 +14,7 @@ entity Mem_Dados is
 end entity;
 
 architecture Behavioral of Mem_Dados is
-    type RAM is array (0 to 127) of std_logic_vector(32 downto 0);
+    type RAM is array (0 to 127) of std_logic_vector(31 downto 0);
     -- como o MIPS lê instruções de 4 em 4, temos 128/4 = 32 espaços disponives
     signal memoria : RAM := (others => (others => '0'));
     -- sinal para manipularmos a memoria criada, inicializamos ela com zeros, aí caso a gente tente acessar um espaço nada escrito
@@ -41,6 +41,8 @@ architecture Behavioral of Mem_Dados is
             else 
                 Dado_lido <= (others => '0'); -- caso o Endereço mude de valor, mas o LerMem está desativado, só retornamos zero na saida
             end if;
-        end process
+            -- isso já é bom pq aí caso tentemos acessar uma parte da memoria que não tem valor acho q não vai dar problema...
+        -- mas se tiver dando ruim podemos tentar zerar as outras posições na memoria(as que não são multiplos de 4)
+        end process;
        
 end Behavioral;

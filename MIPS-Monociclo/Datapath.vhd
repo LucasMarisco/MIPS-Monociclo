@@ -7,14 +7,15 @@ ENTITY Datapath IS
 			clk: in STD_LOGIC;
 			RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
 			Instrucao: in STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
-			Sinal_pro_Controle,Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: out STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
-			Dado,Dado_Escrita,Dado_lido_Mem_Dados: in STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
+			Sinal_pro_Controle: out STD_LOGIC_VECTOR(5 downto 0);
+			Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: out STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
+			Dado,Dado_Escrita,Dado_lido_Mem_Dados: in STD_LOGIC_VECTOR(31 downto 0) -- Dados para manipulacao
             -- não usamos o Dado_Escrita, dar uma olhada nisso 
     );
 END ENTITY;
 
 ARCHITECTURE arch OF Datapath IS
-SIGNAL CarryOut, Zero : STD_LOGIC;
+SIGNAL CarryOut, Zero, FontePC : STD_LOGIC;
 SIGNAL cULA : STD_LOGIC_VECTOR(2 downto 0);
 SIGNAL M1: STD_LOGIC_VECTOR (4 downto 0);
 SIGNAL Instr : STD_LOGIC_VECTOR (25 downto 0);
@@ -58,7 +59,7 @@ BEGIN
 	
 	-- LOGICA REFERENTE AOS BANCO DE REGISTRADORES E A ULA
 	
-	Banco_Reg : entity.work.Banco_de_Registradores(arch)
+	Banco_Reg : entity work.Banco_de_Registradores(arch)
 			generic map (5,32) -- pode fazer assim?(pq temos 2 generics, aí)
             -- NumBitsEndereco e NumBitsDosReg
 			port map (clk,EscReg,Instr(25 downto 21), Instr(20 downto 16), M1, M3, A, B);

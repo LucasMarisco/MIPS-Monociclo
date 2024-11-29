@@ -3,7 +3,7 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 USE ieee.std_logic_unsigned.ALL;
 
-entity MIPS-Monociclo is
+entity MIPS_Monociclo is
     Port (
         clk : in  std_logic;
 
@@ -22,7 +22,7 @@ entity MIPS-Monociclo is
     );
 end entity;
 
-architecture arch of Monociclo is
+architecture arch of MIPS_Monociclo is
     Signal RegDst, DVI, DVC, LerMem, MemParaReg: std_logic;
     Signal ULAOp: std_logic_vector(1 downto 0);
     Signal EscMem, ULAFonte, EscReg: std_logic
