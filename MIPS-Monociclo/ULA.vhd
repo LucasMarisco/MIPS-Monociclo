@@ -3,7 +3,7 @@ USE ieee.std_logic_1164.ALL;
 
 ENTITY ULA IS
     PORT (
-        A,B: in STD_LOGIC_VECTOR(31 DOWNTO 0); -- Entradas
+          A,B: in STD_LOGIC_VECTOR(31 DOWNTO 0); -- Entradas
 		  Controle: in STD_LOGIC_VECTOR(2 DOWNTO 0); -- Sequencia de bits para 
 		  Zero: out STD_LOGIC; -- Nao entendi como que funciona
 		  Resultado: out STD_LOGIC_VECTOR(31 DOWNTO 0)
@@ -41,3 +41,6 @@ BEGIN
 		Resultado <= Resultado_Menor when "111";
 		
 END ARCHITECTURE arch;
+
+-- Problemas da ULA:
+--- Não está tratando overflow

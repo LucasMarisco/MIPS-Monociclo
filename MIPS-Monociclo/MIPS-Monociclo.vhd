@@ -28,7 +28,7 @@ architecture arch of Monociclo is
     Signal EscMem, ULAFonte, EscReg: std_logic
     Signal RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: STD_LOGIC ; -- Sinais de controle
     Signal Instrucao: STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
-    Signal Sinal_pro_Controle,Endereco_Memoria_Instrucao,Endereco_Memoria_Dados: STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
+    Signal Sinal_pro_Controle,Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
     Signal Dado,Dado_Escrita,Dado_lido_Mem_Dados: STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
 
     Datapath : entity work.Datapath(arch)
@@ -48,7 +48,24 @@ architecture arch of Monociclo is
             EscMem,ULAFonte,EscReg
             );
 
-    -- acho que temos que fazer alguma coisa sobre as memoria nesse código ainda       
+    Memoria_de_Intrucao : entity work.Mem_Instr(Behavioral)
+    port map(
+        Endereco_Memoria_Instrucao -- esse signal faz a ligação entre o Datapath e a Memoria 
+        Instrucao -- esse signal "manda" a instrucao da memoria para o Datapath
+        );
+
+    Memoria_de_Dados : entity work.Mem_Dados(Behavioral)
+    port map(
+        clk,
+        Endereco_Memoria_Dados, -- *
+        Dado_a_ser_escrito, -- *
+        EscMem,
+        LerMem ,
+        Dado_lido_Mem_Dados -- *
+        -- * são os signals que podem dar algum problema, pq estão fazendo a manipulação entre o datapath e as memorias
+        -- aí pode ser que fazer isso fora do datapath esteja dando erro, mas temos que ver
+    );
+      
 
 -- Atribuindo os sinais de controle para podermos ver no quartus e fazer os testes
 TRegDst <= RegDst;
@@ -67,6 +84,4 @@ TEndereco_Memoria_Dados <= Endereco_Memoria_Dados
 -- criei signals com os mesmos nomes das portas dos componentes, se a gente fosse mapea-las diretamente ficaria algo
 -- tipo RegDst <= RegDst , pode fazer isso?
 -- além disso, deixei os signals de out para fora para ver nas sinais de onda, funciona fazer assim para fazer os teste?
-
-
 end arch;
