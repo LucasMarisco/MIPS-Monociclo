@@ -16,7 +16,25 @@ end entity;
 architecture Behavioral of Mem_Dados is
     type RAM is array (0 to 127) of std_logic_vector(31 downto 0);
     -- como o MIPS lê instruções de 4 em 4, temos 128/4 = 32 espaços disponives
-    signal memoria : RAM;
+    signal memoria : RAM := (
+		 0  => "00000000000000000000000000000000", -- 0 em binário na posição 00000 da memória
+		 1  => "00000000000000000000000000000001", -- 1 em binário na posição 00001 da memória
+		 2  => "00000000000000000000000000000010", -- 2 em binário e assim por diante...
+		 3  => "00000000000000000000000000000011", -- 3 em binário
+		 4  => "00000000000000000000000000000100", -- 4 em binário
+		 5  => "00000000000000000000000000000101", -- 5 em binário
+		 6  => "00000000000000000000000000000110", -- 6 em binário
+		 7  => "00000000000000000000000000000111", -- 7 em binário
+		 8  => "00000000000000000000000000001000", -- 8 em binário
+		 9  => "00000000000000000000000000001001", -- 9 em binário
+		 10 => "00000000000000000000000000001010", -- 10 em binário
+		 11 => "00000000000000000000000000001011", -- 11 em binário
+		 12 => "00000000000000000000000000001100", -- 12 em binário
+		 13 => "00000000000000000000000000001101", -- 13 em binário
+		 14 => "00000000000000000000000000001110", -- 14 em binário
+		 15 => "00000000000000000000000000001111"  -- 15 em binário
+		others => (others => '0')
+	 );
     -- sinal para manipularmos a memoria criada, inicializamos ela com zeros, aí caso a gente tente acessar um espaço nada escrito
     -- não teremos problemas(tirei do final, mas é assim   := (others => (others => '0')))
     signal adress: integer; -- definimos esse signal para facilitar a leitura do código
