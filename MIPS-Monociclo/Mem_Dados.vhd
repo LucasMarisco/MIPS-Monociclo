@@ -16,17 +16,18 @@ end entity;
 architecture Behavioral of Mem_Dados is
     type RAM is array (0 to 127) of std_logic_vector(31 downto 0);
     -- como o MIPS lê instruções de 4 em 4, temos 128/4 = 32 espaços disponives
-    signal memoria : RAM := (others => (others => '0'));
+    signal memoria : RAM;
     -- sinal para manipularmos a memoria criada, inicializamos ela com zeros, aí caso a gente tente acessar um espaço nada escrito
-    -- não teremos problemas(eu espero)
+    -- não teremos problemas(tirei do final, mas é assim   := (others => (others => '0')))
     signal adress: integer; -- definimos esse signal para facilitar a leitura do código
     begin
-
+			
+		  adress <= (to_integer(unsigned(Endereco)));	
         process(clk)
         begin
             if rising_edge(clk) then
                 if EscMem = '1' then
-                    adress <= (to_integer(unsigned(Endereco)));
+                   
                     memoria(adress) <= Dado_a_ser_escrito; -- escrevemos na memória 
                     -- lembre que o adress é sempre um multipli de 4!
                 end if;
@@ -36,7 +37,6 @@ architecture Behavioral of Mem_Dados is
         process(Endereco,LerMem)
         begin
             if LerMem = '1' then
-                adress <= (to_integer(unsigned(Endereco))); 
                 Dado_lido <= memoria(adress);
             else 
                 Dado_lido <= (others => '0'); -- caso o Endereço mude de valor, mas o LerMem está desativado, só retornamos zero na saida

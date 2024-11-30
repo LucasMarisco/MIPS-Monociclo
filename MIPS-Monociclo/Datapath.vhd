@@ -5,7 +5,8 @@ ENTITY Datapath IS
     PORT (
 	 -- Sinais de Controle, Entrada e Saída
 			clk: in STD_LOGIC;
-			RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
+			RegDst,DvI,DvC,LerMem,MemParaReg,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
+			ULAOp : in STD_LOGIC_VECTOR(1 DOWNTO 0) ;
 			Instrucao: in STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
 			Sinal_pro_Controle: out STD_LOGIC_VECTOR(5 downto 0);
 			Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: out STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
@@ -64,10 +65,11 @@ BEGIN
             -- NumBitsEndereco e NumBitsDosReg
 			port map (clk,EscReg,Instr(25 downto 21), Instr(20 downto 16), M1, M3, A, B);
             --        clk,EscReg,     LerDoReg1,      LerDoReg2,  EscreverNoReg,DadoParaEscrever,DadoLido1,DadoLido2
+			--							5				5				5		   32				32			32			
 	Dado_a_ser_escrito <= B; -- vamos enviar esse sinal para a memoria de Dados
 
 	MUX1 : entity work.Multiplexador_Generico(arch)
-		generic map (4)
+		generic map (5)
 		port map (Instr(20 downto 16), Instr(15 downto 11),RegDst,M1);	
 
 	-- veer se é assim que é pra fazer a extensão de sinal(ver se é nessa ordem no caso)				

@@ -5,7 +5,7 @@ USE ieee.std_logic_unsigned.ALL;
 
 entity Somador_Generico is
     generic (
-        N : integer := 8  -- Define o número de bits como um parâmetro genérico
+        N : integer := 32  -- Define o número de bits como um parâmetro genérico
     );
     Port (
         A : in  std_logic_vector(N-1 downto 0);  -- Primeiro operando de N bits

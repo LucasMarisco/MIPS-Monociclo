@@ -13,7 +13,7 @@ entity Banco_de_Registradores is
         clk, EscReg : in std_logic; -- Entradas de Controle
         LerDoReg1,LerDoReg2,EscreverNoReg : in std_logic_vector(NumBitsEndereco-1 downto 0); -- Endereço dos Registradores(seriam respectivamente os rs,rt,rd dos slides)
         DadoParaEscrever : in std_logic_vector(NumBitsDosReg-1 downto 0); -- Dado a ser Escrito
-        DadoLido1,DadoLido2 : out std_logic_vector(NumBitsEndereco-1 downto 0) -- Saida de Dados(saida dos valores do Registradores Lidos)
+        DadoLido1,DadoLido2 : out std_logic_vector(NumBitsDosReg-1 downto 0) -- Saida de Dados(saida dos valores do Registradores Lidos)
     );
 end entity;
 

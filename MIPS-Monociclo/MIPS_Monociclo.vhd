@@ -9,77 +9,81 @@ entity MIPS_Monociclo is
 
         --deixei todos os IN comentados, e só os out pra gente poder acompanhar os valores deles no quartus
         -- do controle
-        TRegDst,TDVI,TDVC,TLerMem,TMemParaReg out std_logic;
+        TRegDst,TDVI,TDVC,TLerMem,TMemParaReg: out std_logic;
         TULAOp: out std_logic_vector(1 downto 0);
-        TEscMem,TULAFonte,TEscReg, : out std_logic
+        TEscMem,TULAFonte,TEscReg : out std_logic;
 
         -- do datapath
         --clk: in STD_LOGIC;
 		--RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
 		--Instrucao: in STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
-		TSinal_pro_Controle,TEndereco_Memoria_Instrucao,TEndereco_Memoria_Dados: out STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
+		TSinal_pro_Controle: out STD_LOGIC_VECTOR(5 downto 0);
+		TEndereco_Memoria_Instrucao,TEndereco_Memoria_Dados: out STD_LOGIC_VECTOR(31 downto 0) -- Entrada da memoria de instrucao e de dados
 		--Dado,Dado_Escrita,Dado_lido_Mem_Dados: in STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
     );
 end entity;
 
 architecture arch of MIPS_Monociclo is
-    Signal RegDst, DVI, DVC, LerMem, MemParaReg: std_logic;
+    Signal RegDst, DVI, DvC, LerMem, MemParaReg: std_logic;
     Signal ULAOp: std_logic_vector(1 downto 0);
-    Signal EscMem, ULAFonte, EscReg: std_logic
-    Signal RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: STD_LOGIC ; -- Sinais de controle
+    Signal EscMem, ULAFonte, EscReg: std_logic;
     Signal Instrucao: STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
-    Signal Sinal_pro_Controle,Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
+    Signal Sinal_pro_Controle: STD_LOGIC_VECTOR(5 downto 0);
+	 Signal Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
     Signal Dado,Dado_Escrita,Dado_lido_Mem_Dados: STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
 
-    Datapath : entity work.Datapath(arch)
+    begin
+
+        Datapath : entity work.Datapath(arch)
+            port map(
+                clk,
+                RegDst,DvI,DvC,LerMem,MemParaReg,EscMem,ULAFonte,EscReg,
+                ULAOp,
+                Instrucao,
+                Sinal_pro_Controle,
+                Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito,
+                Dado,Dado_Escrita,Dado_lido_Mem_Dados
+                );
+
+        Controle : entity work.Controle(arch)
+            port map(
+                Sinal_pro_Controle,
+                RegDst,DVI,DVC,LerMem,MemParaReg,
+                ULAOp,
+                EscMem,ULAFonte,EscReg
+                );
+
+        Memoria_de_Intrucao : entity work.Mem_Instr(Behavioral)
+        port map(
+            Endereco_Memoria_Instrucao, -- esse signal faz a ligação entre o Datapath e a Memoria 
+            Instrucao -- esse signal "manda" a instrucao da memoria para o Datapath
+            );
+
+        Memoria_de_Dados : entity work.Mem_Dados(Behavioral)
         port map(
             clk,
-            RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg,
-            Instrucao,
-            Sinal_pro_Controle,Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,
-            Dado,Dado_Escrita,Dado_lido_Mem_Dados
-            );
-
-    Controle : entity work.Controle(arch)
-        port map(
-            Opcode,
-            RegDst,DVI,DVC,LerMem,MemParaReg,
-            ULAOp,
-            EscMem,ULAFonte,EscReg
-            );
-
-    Memoria_de_Intrucao : entity work.Mem_Instr(Behavioral)
-    port map(
-        Endereco_Memoria_Instrucao -- esse signal faz a ligação entre o Datapath e a Memoria 
-        Instrucao -- esse signal "manda" a instrucao da memoria para o Datapath
+            Endereco_Memoria_Dados, -- *
+            Dado_a_ser_escrito, -- *
+            EscMem,
+            LerMem ,
+            Dado_lido_Mem_Dados -- *
+            -- * são os signals que podem dar algum problema, pq estão fazendo a manipulação entre o datapath e as memorias
+            -- aí pode ser que fazer isso fora do datapath esteja dando erro, mas temos que ver
         );
-
-    Memoria_de_Dados : entity work.Mem_Dados(Behavioral)
-    port map(
-        clk,
-        Endereco_Memoria_Dados, -- *
-        Dado_a_ser_escrito, -- *
-        EscMem,
-        LerMem ,
-        Dado_lido_Mem_Dados -- *
-        -- * são os signals que podem dar algum problema, pq estão fazendo a manipulação entre o datapath e as memorias
-        -- aí pode ser que fazer isso fora do datapath esteja dando erro, mas temos que ver
-    );
       
 
 -- Atribuindo os sinais de controle para podermos ver no quartus e fazer os testes
 TRegDst <= RegDst;
-TDVI <= DVI
-TDVI <= DVI
-TLerMem <= LerMem
-TMemParaReg <= MemParaReg
-TULAOp <= ULAOp
-TEscMem <= EscMem
-TULAFonte <= ULAFonte
-TEscReg <= EscReg
-TSinal_pro_Controle <= Sinal_pro_Controle
-TEndereco_Memoria_Instrucao <= Endereco_Memoria_Instrucao
-TEndereco_Memoria_Dados <= Endereco_Memoria_Dados
+TDVI <= DVI;
+TLerMem <= LerMem;
+TMemParaReg <= MemParaReg;
+TULAOp <= ULAOp;
+TEscMem <= EscMem;
+TULAFonte <= ULAFonte;
+TEscReg <= EscReg;
+TSinal_pro_Controle <= Sinal_pro_Controle;
+TEndereco_Memoria_Instrucao <= Endereco_Memoria_Instrucao;
+TEndereco_Memoria_Dados <= Endereco_Memoria_Dados;
 
 -- criei signals com os mesmos nomes das portas dos componentes, se a gente fosse mapea-las diretamente ficaria algo
 -- tipo RegDst <= RegDst , pode fazer isso?
