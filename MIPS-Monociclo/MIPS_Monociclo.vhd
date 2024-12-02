@@ -29,7 +29,7 @@ architecture arch of MIPS_Monociclo is
     Signal EscMem, ULAFonte, EscReg: std_logic;
     Signal Instrucao: STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
     Signal Sinal_pro_Controle: STD_LOGIC_VECTOR(5 downto 0);
-	 Signal Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
+	Signal Endereco_Memoria_Instrucao,Endereco_Memoria_Dados,Dado_a_ser_escrito: STD_LOGIC_VECTOR(31 downto 0); -- Entrada da memoria de instrucao e de dados
     Signal Dado,Dado_Escrita,Dado_lido_Mem_Dados: STD_LOGIC_VECTOR(31 downto 0); -- Dados para manipulacao
 
     begin

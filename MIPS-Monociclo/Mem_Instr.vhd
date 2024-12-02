@@ -22,15 +22,16 @@ architecture Behavioral of Mem_Instr is
     begin
 
         -------------------Coloque aqui as intruções que o MIPS vai fazer-----------
-        memoria(0)  <= "00000000000000000000000000000000"; -- NOP
-        memoria(4)  <= "00000001000010010101000000100000"; -- ADD $t2, $t0, $t1 (soma os valores do regt0 e t1 e salva no t2)
-        memoria(8)  <= "00000001001010000101100000100010"; -- SUB $t3, $t1, $t0
-        memoria(12) <= "10001101000010010000000000000100"; -- LW $t1, 4($t0)
-        memoria(16) <= "10101101000010010000000000001000"; -- SW $t1, 8($t0)
-        memoria(20) <= "00010001000010010000000000010000"; -- BEQ $t0, $t1, 16        
-        memoria(24) <= "00000000000000000000000000000000";
+        memoria(0) <= "00100001001010100000000000001100"; -- ADDI $10, $9, 12
+        memoria(4) <= "00100001010011010000000000000101"; -- ADDI $13, $10, 5
+        memoria(8) <= "10001101010011100000000000000100"; -- LW $14, 4($10)
+        memoria(12) <= "10101101010011110000000000001000"; -- SW $15, 8($10)
+        memoria(16) <= "00010001010011100000000000000010"; -- BEQ $10, $14, 2
+        memoria(20) <= "00000001110011110101000000100010"; -- SUB $10, $14, $15
+        memoria(24) <= "00000001010011010101100000100000"; -- ADD $11, $10, $13
         memoria(28) <= "00000000000000000000000000000000";
         memoria(32) <= "00000000000000000000000000000000";
+
         ----------------------------------------------------------------------------
 
         adress <= (to_integer(unsigned(Endereco)));
@@ -40,4 +41,5 @@ architecture Behavioral of Mem_Instr is
         -- acho que daria para otimizar isso restringindo só até o bit 6, pq com 32 bits, só precisamos de
         -- 6 bits para representar tudo, mas vou deixar os 32 só por precaução
         Intrucao_lida <= memoria(adress);
+        
 end Behavioral;
