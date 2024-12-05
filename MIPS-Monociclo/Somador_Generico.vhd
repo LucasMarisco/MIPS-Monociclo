@@ -1,7 +1,6 @@
 library IEEE;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
-USE ieee.std_logic_unsigned.ALL;
 
 entity Somador_Generico is
     generic (
@@ -18,7 +17,7 @@ end Somador_Generico;
 architecture arch of Somador_Generico is
 	 SIGNAL Soma: std_logic_vector(N DOWNTO 0);
 		BEGIN
-			Soma <= ('0'& A) + ('0' & B); -- Realizacao da soma
+			Soma <= std_logic_vector(resize(signed(A), N+1) + resize(signed(B), N+1)); -- Realizacao da soma
 			CarryOut <= Soma(N); -- Bit mais significativo da soma sai pelo carryOut 
 			Resultado <= Soma(N-1 downto 0); -- Resultado com N bits
 end arch;

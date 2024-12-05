@@ -4,7 +4,7 @@ USE ieee.std_logic_1164.ALL;
 ENTITY Datapath IS
     PORT (
 	 -- Sinais de Controle, Entrada e Saída
-			clk: in STD_LOGIC;
+			clk, rst: in STD_LOGIC;
 			RegDst,DvI,DvC,LerMem,MemParaReg,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
 			ULAOp : in STD_LOGIC_VECTOR(1 DOWNTO 0) ;
 			Instrucao: in STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao
@@ -27,7 +27,7 @@ BEGIN
 	
 	PC : entity work.Registrador_Generico(arch)
 			generic map (32)
-			port map (clk, '1', M5, sPC);
+			port map (clk=>clk, en=>'1', rst=>rst, D=>M5, Q=>sPC);
 				   -- clk,  en,  d,  q
 
     Endereco_Memoria_Instrucao <= sPC;
@@ -56,7 +56,7 @@ BEGIN
 	
 	MUX5 : entity work.Multiplexador_Generico(arch)
 			generic map (32)
-			port map(D1,M4,DVI,M5);
+			port map(M4,D1,DVI,M5);
 	
 	-- LOGICA REFERENTE AOS BANCO DE REGISTRADORES E A ULA
 	

@@ -18,7 +18,7 @@ architecture Behavioral of Mem_Instr is
     signal memoria : ROM;
     -- como o MIPS lê de 4 em 4, ele vai acessar a memoria sempre assim(daria pra fazer ele ler aquelas half-word, mas acho não vamos abordar isso)
 
-    signal adress: integer; -- definimos esse signal para facilitar a leitura do código
+    signal address: integer:=0; -- definimos esse signal para facilitar a leitura do código
     begin
 
         -------------------Coloque aqui as intruções que o MIPS vai fazer-----------
@@ -34,12 +34,15 @@ architecture Behavioral of Mem_Instr is
 
         ----------------------------------------------------------------------------
 
-        adress <= (to_integer(unsigned(Endereco)));
+        address <= 0 when (to_integer(signed(Endereco)) < 0) else
+                   32 when (to_integer(signed(Endereco)) > 32) else 
+                   to_integer(signed(Endereco));
+
         -- aqui estamos transformando o Endereço em um Unsigned, pois não teremos Endereço negativo
         -- depois convertemos ele para um inteiro, para podermos fazer algo tipo memoria(4), esse 4 é
         -- o inteiro que vai vir dessa conversão por exemplo.
         -- acho que daria para otimizar isso restringindo só até o bit 6, pq com 32 bits, só precisamos de
         -- 6 bits para representar tudo, mas vou deixar os 32 só por precaução
-        Intrucao_lida <= memoria(adress);
+        Intrucao_lida <= memoria(address);
         
 end Behavioral;
