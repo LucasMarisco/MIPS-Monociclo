@@ -8,15 +8,31 @@ end entity;
 
 architecture arch of TestBench is
 
-    -- Sinais locais para conectar ao DUT (Device Under Test)
-    signal Endereco_tb : std_logic_vector(31 downto 0);
-    signal Intrucao_lida_tb : std_logic_vector(31 downto 0);
+    signal TRegDst,TDVI,TDVC,TLerMem,TMemParaReg: std_logic;
+    signal TULAOp:  std_logic_vector(1 downto 0);
+    signal TEscMem,TULAFonte,TEscReg:  std_logic;
+    signal TSinal_pro_Controle: STD_LOGIC_VECTOR(5 downto 0);
+    signal 
 
     -- Instancia o módulo a ser testado
-    component Mem_Instr
-        port (
-            Endereco : in std_logic_vector(31 downto 0);
-            Intrucao_lida : out std_logic_vector(31 downto 0)
+    component MIPS_Monociclo is
+        Port (
+            clk : in  std_logic;
+
+            --deixei todos os IN comentados, e só os out pra gente poder acompanhar os valores deles no quartus
+            -- do controle
+            TRegDst,TDVI,TDVC,TLerMem,TMemParaReg: out std_logic;
+            TULAOp: out std_logic_vector(1 downto 0);
+            TEscMem,TULAFonte,TEscReg : out std_logic;
+    
+            -- do datapath
+            --clk: in STD_LOGIC;
+            --RegDst,DvC,LerMem,MemParaReg,ULAOp,EscMem,ULAFonte,EscReg: in STD_LOGIC ; -- Sinais de controle
+            TInstrucao: in STD_LOGIC_VECTOR(31 downto 0); -- Saida da memoria de instrucao ++++++++++++++++++++++++++++++++++++++
+            TSinal_pro_Controle: out STD_LOGIC_VECTOR(5 downto 0);
+            TEndereco_Memoria_Instrucao,TEndereco_Memoria_Dados: out STD_LOGIC_VECTOR(31 downto 0) -- Entrada da memoria de instrucao e de dados
+            --Dado,Dado_Escrita,
+            --Dado_lido_Mem_Dados: in STD_LOGIC_VECTOR(31 downto 0); -- +++++++++++++++++++++++++++++++++(acho que não rola de forçar essa)
         );
     end component;
 
@@ -24,15 +40,19 @@ begin
     -- Conexão entre o DUT e os sinais do testbench
     DUT: Mem_Instr
         port map (
-            Endereco => Endereco_tb,
-            Intrucao_lida => Intrucao_lida_tb
+            clk, 
+            TRegDst,TDVI,TDVC,TLerMem,TMemParaReg,
+            TULAOp,
+            TEscMem,TULAFonte,TEscReg,
+            TSinal_pro_Controle,
+            TEndereco_Memoria_Instrucao,TEndereco_Memoria_Dados
         );
 
     -- Processo de teste
     process
     begin
         -- Testa o endereço 0 (espera ADDI $10, $9, 12)
-        Endereco_tb <= x"00000000";
+        TInstrucao <= "00100001001010100000000000001100";
         wait for 10 ns;  -- Espera 10 ns para observar o resultado
         assert Intrucao_lida_tb = "00100001001010100000000000001100"
             report "Erro: Endereço 0 não retornou ADDI $10, $9, 12"
